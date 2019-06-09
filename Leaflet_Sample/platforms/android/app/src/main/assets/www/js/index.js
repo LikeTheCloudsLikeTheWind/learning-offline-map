@@ -32,12 +32,31 @@ var app = {
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+        // var parentElement = document.getElementById(id);
+        // var listeningElement = parentElement.querySelector('.listening');
+        // var receivedElement = parentElement.querySelector('.received');
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
+        // listeningElement.setAttribute('style', 'display:none;');
+        // receivedElement.setAttribute('style', 'display:block;');
+        
+        // 地図を作成する
+        var mymap = L.map('mapid').setView([35.494505, 137.500998], 26);
+        // タイルレイヤーを作成し、地図にセットする。（国土地理院）
+        L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">国土地理院</a>',
+        }).addTo(mymap);
+        
+        // タイルレイヤーを作成し、地図にセットする。（OpenStreetMap）
+        // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+        //     maxZoom: 18,
+    	//     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, '
+        // }).addTo(mymap);
+
+        // マーカーを作成する
+        var marker = L.marker([35.494505, 137.500998]).addTo(mymap);
+        // クリックした際にポップアップメッセージを表示する
+        marker.bindPopup("WellCafe");
 
         console.log('Received Event: ' + id);
     }
