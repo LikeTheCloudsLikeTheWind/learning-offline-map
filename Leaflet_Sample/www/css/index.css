@@ -59,7 +59,7 @@ html, body, #map {
     width: 100vw;
 }
 #mapid {
-    height: 90%;
+    height: 100%;
 }
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {

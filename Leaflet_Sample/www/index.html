@@ -34,22 +34,62 @@
         <!-- <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover"> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
         <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
+        <title>SampleMap</title>
     </head>
     <body>
-        <!-- <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
-        </div> -->
         <div id="mapid"></div>
         <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
         <!-- オフラインで使用する場合のleaflet　↓↓↓ -->
         <link rel="stylesheet" href="css/leaflet.css" />
         <script src="js/leaflet.js"></script>
+        <!-- <script type="text/javascript" src="js/index.js"></script> -->
+        <script>
+            //ズームコントロールを非表示
+            let map = L.map('mapid', { zoomControl: false });
+            // 地図を作成する
+            let mymap = map.setView([35.494505, 137.500998], 15);
+    
+            //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+            L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(mymap);
+            
+            //ズームコントロールを左下で地図に追加
+            L.control.zoom({ position: 'bottomleft' }).addTo(mymap);
+            
+            //地理院地図の標準地図タイル
+            let gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+              {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+            //地理院地図の淡色地図タイル
+            let gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+              {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+            //オープンストリートマップのタイル
+            let osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+              {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+            //baseMapsオブジェクトのプロパティに3つのタイルを設定
+            let baseMaps = {
+              "地理院地図" : gsi,
+              "淡色地図" : gsipale,
+              "オープンストリートマップ"  : osm
+            };
+            //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
+            //コントロール内にプロパティ名が表示される
+            L.control.layers(baseMaps).addTo(mymap);
+            gsi.addTo(mymap);
+    
+            // WellCafeのマーカーを作成する
+            //ポップアップする文字（HTML可、ここでは画像を表示）
+            let sucontents = "WellCafe<br><img src='css/images/WellCafe.png' width='524' height='269'>"
+            //ポップアップオブジェクトを作成
+            let popup1 = L.popup({ maxWidth: 550 }).setContent(sucontents);
+            let marker_wellcafe = L.marker([35.494505, 137.500998]).addTo(mymap);
+            // クリックした際にポップアップメッセージを表示する
+            marker_wellcafe.bindPopup(popup1);
+    
+            // 川上屋のマーカーを作成する
+            let marker_kawakamiya = L.marker([35.4945524, 137.50075449999997]).addTo(mymap);
+            // クリックした際にポップアップメッセージを表示する
+            marker_kawakamiya.bindPopup("川上屋");
+    
+        </script>
         <!-- オンラインで使用する場合のleaflet　↓↓↓ -->
         <!-- <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
             integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="

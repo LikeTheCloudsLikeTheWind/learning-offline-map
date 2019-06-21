@@ -32,33 +32,63 @@ var app = {
 
     // Update DOM on a Received Event
     receivedEvent: function(id) {
+        // 【Default Code】 ↓↓↓↓↓
         // var parentElement = document.getElementById(id);
         // var listeningElement = parentElement.querySelector('.listening');
         // var receivedElement = parentElement.querySelector('.received');
 
         // listeningElement.setAttribute('style', 'display:none;');
         // receivedElement.setAttribute('style', 'display:block;');
+        // 【Default Code】 ↑↑↑↑↑
         
+        // 【Leaflet.js用Code】　↓↓↓↓↓
+        //ズームコントロールを非表示
+        var map = L.map('mapid', { zoomControl: false });
         // 地図を作成する
-        var mymap = L.map('mapid').setView([35.494505, 137.500998], 26);
-        // タイルレイヤーを作成し、地図にセットする。（国土地理院）
-        L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png', {
-            maxZoom: 18,
-            attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank">国土地理院</a>',
-        }).addTo(mymap);
-        
-        // タイルレイヤーを作成し、地図にセットする。（OpenStreetMap）
-        // L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-        //     maxZoom: 18,
-    	//     attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, '
-        // }).addTo(mymap);
+        var mymap = map.setView([35.494505, 137.500998], 15);
 
-        // マーカーを作成する
-        var marker = L.marker([35.494505, 137.500998]).addTo(mymap);
+        //スケールコントロールを最大幅200px、右下、m単位で地図に追加
+        L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(mymap);
+        
+        //ズームコントロールを左下で地図に追加
+        L.control.zoom({ position: 'bottomleft' }).addTo(mymap);
+        
+        //地理院地図の標準地図タイル
+        var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+          {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+        //地理院地図の淡色地図タイル
+        var gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
+          {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+        //オープンストリートマップのタイル
+        var osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+          {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+        //baseMapsオブジェクトのプロパティに3つのタイルを設定
+        var baseMaps = {
+          "地理院地図" : gsi,
+          "淡色地図" : gsipale,
+          "オープンストリートマップ"  : osm
+        };
+        //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
+        //コントロール内にプロパティ名が表示される
+        L.control.layers(baseMaps).addTo(mymap);
+        gsi.addTo(mymap);
+
+        // WellCafeのマーカーを作成する
+        //ポップアップする文字（HTML可、ここでは画像を表示）
+        var sucontents = "WellCafe<br><img src='/www/css/images/WellCafe.png' width='524' height='269'>"
+        //ポップアップオブジェクトを作成
+        var popup1 = L.popup({ maxWidth: 550 }).setContent(sucontents);
+        var marker_wellcafe = L.marker([35.494505, 137.500998]).addTo(mymap);
         // クリックした際にポップアップメッセージを表示する
-        marker.bindPopup("WellCafe");
+        marker_wellcafe.bindPopup(popup1);
+
+        // 川上屋のマーカーを作成する
+        var marker_kawakamiya = L.marker([35.4945524, 137.50075449999997]).addTo(mymap);
+        // クリックした際にポップアップメッセージを表示する
+        marker_kawakamiya.bindPopup("川上屋");
 
         console.log('Received Event: ' + id);
+        // 【Leaflet.js用Code】　↑↑↑↑↑
     }
 };
 
