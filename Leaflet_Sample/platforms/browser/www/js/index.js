@@ -45,7 +45,7 @@ var app = {
         //ズームコントロールを非表示
         var map = L.map('mapid', { zoomControl: false });
         // 地図を作成する
-        var mymap = map.setView([35.494505, 137.500998], 15);
+        var mymap = map.setView([35.494505, 137.500998], 18);
 
         //スケールコントロールを最大幅200px、右下、m単位で地図に追加
         L.control.scale({ maxWidth: 200, position: 'bottomright', imperial: false }).addTo(mymap);
@@ -53,25 +53,33 @@ var app = {
         //ズームコントロールを左下で地図に追加
         L.control.zoom({ position: 'bottomleft' }).addTo(mymap);
         
-        //地理院地図の標準地図タイル
-        var gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
-          {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+        //地理院地図の標準地図タイル(オフライン)
+        var gsi_offline =L.tileLayer('file://../../css/images/BaseMap/{z}/{x}/{y}.png', 
+            {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル(Off)</a>"});
+        //地理院地図の標準地図タイル(オンライン)
+        var gsi_online =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+            {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル(On)</a>"});
         //地理院地図の淡色地図タイル
         var gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
-          {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
-        //オープンストリートマップのタイル
-        var osm = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
-          {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap</a> contributors" });
+            {attribution: "<a href='http://portal.cyberjapan.jp/help/termsofuse.html' target='_blank'>地理院タイル</a>"});
+        //オープンストリートマップのタイル(オフライン)
+        var osm_offline = L.tileLayer('file://../../css/images/osm/honmachi_magome/{z}/{x}/{y}.png',
+            {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap(Off)</a>" });
+        //オープンストリートマップのタイル(オンライン)
+        var osm_online = L.tileLayer('http://tile.openstreetmap.jp/{z}/{x}/{y}.png',
+            {  attribution: "<a href='http://osm.org/copyright' target='_blank'>OpenStreetMap(On)</a> contributors" });
         //baseMapsオブジェクトのプロパティに3つのタイルを設定
         var baseMaps = {
-          "地理院地図" : gsi,
-          "淡色地図" : gsipale,
-          "オープンストリートマップ"  : osm
+            "地理院地図(OFF)" : gsi_offline
+            ,"地理院地図(ON)" : gsi_online
+            ,"淡色地図" : gsipale
+            ,"オープンストリートマップ(OFF)"  : osm_offline
+            ,"オープンストリートマップ(ON)"  : osm_online
         };
         //layersコントロールにbaseMapsオブジェクトを設定して地図に追加
         //コントロール内にプロパティ名が表示される
         L.control.layers(baseMaps).addTo(mymap);
-        gsi.addTo(mymap);
+        gsi_offline.addTo(mymap);
 
         // WellCafeのマーカーを作成する
         //ポップアップする文字（HTML可、ここでは画像を表示）

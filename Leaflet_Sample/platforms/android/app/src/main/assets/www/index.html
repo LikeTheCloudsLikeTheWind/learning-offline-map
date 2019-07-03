@@ -56,7 +56,11 @@
             L.control.zoom({ position: 'bottomleft' }).addTo(mymap);
             
             //地理院地図の標準地図タイル
-            let gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+            // (OnLineマップ)
+            // let gsi =L.tileLayer('https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png', 
+            //   {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
+            // (OffLineマップ)
+            let gsi =L.tileLayer('css/images/BaseMap/{z}/{x}/{y}.png', 
               {attribution: "<a href='https://maps.gsi.go.jp/development/ichiran.html' target='_blank'>地理院タイル</a>"});
             //地理院地図の淡色地図タイル
             let gsipale = L.tileLayer('http://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png',
